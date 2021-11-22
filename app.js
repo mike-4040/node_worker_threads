@@ -3,14 +3,24 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const { expensiveFunction } = require('./expensive_function');
+const { expensiveFunctionWT, expensiveFunctionSync } = require('./expensive_function');
 
-app.get('/:some_number', async (req, res) => {
+app.get('/wt/:some_number', async (req, res) => {
   const { some_number } = req.params;
   try {
-    console.log({ some_number });
     res.send('job started\n');
-    const async_result = await expensiveFunction(Number(some_number));
+    const async_result = await expensiveFunctionWT(Number(some_number));
+    console.dir(async_result);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.get('/sync/:some_number', async (req, res) => {
+  const { some_number } = req.params;
+  try {
+    res.send('job started\n');
+    const async_result = await expensiveFunctionSync(Number(some_number));
     console.dir(async_result);
   } catch (err) {
     console.error(err);
